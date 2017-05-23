@@ -26,7 +26,7 @@ public class TransparentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transparent);
         getWindow().getDecorView().setSystemUiVisibility(SYSTEM_UI_VISIBLE);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         final CardAdapter adapter = new CardAdapter(this);
         recyclerView.setAdapter(adapter);
