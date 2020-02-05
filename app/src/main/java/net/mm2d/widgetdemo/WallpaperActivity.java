@@ -12,11 +12,11 @@ import android.graphics.Color;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class WallpaperActivity extends AppCompatActivity {
     private static final int SYSTEM_UI_VISIBLE = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -34,8 +34,9 @@ public class WallpaperActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         final WallpaperManager manager = WallpaperManager.getInstance(this);
-        recyclerView.setOnScrollListener(new OnScrollListener() {
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             private int mOffset;
+
             @Override
             public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
                 mOffset += dy;
@@ -46,7 +47,7 @@ public class WallpaperActivity extends AppCompatActivity {
                 if (height == 0) {
                     return;
                 }
-                final float offset = mOffset / (float)height;
+                final float offset = mOffset / (float) height;
                 manager.setWallpaperOffsets(recyclerView.getWindowToken(), offset, offset);
             }
         });
