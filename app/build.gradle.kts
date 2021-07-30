@@ -14,16 +14,17 @@ val versionMinor = 0
 val versionPatch = 1
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     buildToolsVersion = "30.0.3"
 
     defaultConfig {
         applicationId = "net.mm2d.widgetdemo"
-        minSdkVersion(21)
-        targetSdkVersion(30)
+        minSdk = 21
+        targetSdk = 30
         versionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
-        resConfigs("en", "ja")
+        resourceConfigurations += "en"
+        resourceConfigurations += "ja"
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
         base.archivesName.set("${applicationName}-${versionName}")
