@@ -11,22 +11,26 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
+import net.mm2d.widgetdemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        findViewById<View>(R.id.icon1).setOnClickListener { v: View ->
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.icon1.setOnClickListener {
             startActivity(
                 Intent(this@MainActivity, TransparentActivity::class.java),
-                makeScaleUpAnimationBundle(v)
+                makeScaleUpAnimationBundle(it)
             )
             finish()
         }
-        findViewById<View>(R.id.icon2).setOnClickListener { v: View ->
+        binding.icon2.setOnClickListener {
             startActivity(
                 Intent(this@MainActivity, WallpaperActivity::class.java),
-                makeScaleUpAnimationBundle(v)
+                makeScaleUpAnimationBundle(it)
             )
             finish()
         }

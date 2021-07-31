@@ -7,34 +7,29 @@
 package net.mm2d.widgetdemo
 
 import android.graphics.Color
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import net.mm2d.widgetdemo.databinding.ActivityTransparentBinding
 
 class TransparentActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityTransparentBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_transparent)
+        binding = ActivityTransparentBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         window.decorView.systemUiVisibility = SYSTEM_UI_VISIBLE
-        val recyclerView =
-            findViewById<View>(R.id.recycler_view) as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = CardAdapter(this)
-        recyclerView.adapter = adapter
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            adapter.setOnItemClickListener(object : CardAdapter.OnItemClickListener {
-                override fun onClick(color: Int) {
-                    window.statusBarColor = color
-                    window.navigationBarColor = color
-                }
-            })
-            window.statusBarColor = Color.TRANSPARENT
-            window.navigationBarColor = Color.TRANSPARENT
+        binding.recyclerView.adapter = adapter
+        adapter.setOnItemClickListener {
+            window.statusBarColor = it
+            window.navigationBarColor = it
         }
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
     }
 
     override fun finish() {

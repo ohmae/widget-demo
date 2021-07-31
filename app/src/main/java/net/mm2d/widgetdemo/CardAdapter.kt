@@ -11,67 +11,46 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import net.mm2d.widgetdemo.databinding.ListItemBinding
 
 /**
  * @author [大前良介 (OHMAE Ryosuke)](mailto:ryo@mm2d.net)
  */
-class CardAdapter(context: Context?) :
-    RecyclerView.Adapter<CardAdapter.ViewHolder>() {
+class CardAdapter(context: Context) : RecyclerView.Adapter<CardAdapter.ViewHolder>() {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
-        return ViewHolder(
-            layoutInflater.inflate(
-                R.layout.list_item,
-                parent,
-                false
-            )
-        )
-    }
+    private var onItemClickListener: OnItemClickListener? = null
 
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
-    ) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(ListItemBinding.inflate(layoutInflater, parent, false))
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.applyItem(position)
     }
 
-    override fun getItemCount(): Int {
-        return 36
+    override fun getItemCount(): Int = 36
+
+    fun setOnItemClickListener(listener: OnItemClickListener?) {
+        onItemClickListener = listener
     }
 
-    interface OnItemClickListener {
+    fun interface OnItemClickListener {
         fun onClick(color: Int)
     }
 
-    private var onItemClickListener: OnItemClickListener? = null
-    fun setOnItemClickListener(l: OnItemClickListener?) {
-        onItemClickListener = l
-    }
-
-    inner class ViewHolder(view: View) :
-        RecyclerView.ViewHolder(view), View.OnClickListener {
-        private val imageView: ImageView = view.findViewById<View>(R.id.icon) as ImageView
+    inner class ViewHolder(
+        private val binding: ListItemBinding
+    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         private var color = 0
+
         fun applyItem(position: Int) {
-            val hsv = floatArrayOf(position * 10f, 1.0f, 1.0f)
-            color = Color.HSVToColor(hsv)
-            imageView.setColorFilter(color)
+            binding.root.setOnClickListener(this)
+            color = Color.HSVToColor(floatArrayOf(position * 10f, 1.0f, 1.0f))
+            binding.icon.setColorFilter(color)
         }
 
         override fun onClick(v: View) {
-            if (onItemClickListener != null) {
-                onItemClickListener!!.onClick(color)
-            }
-        }
-
-        init {
-            view.setOnClickListener(this)
+            onItemClickListener?.onClick(color)
         }
     }
-
 }

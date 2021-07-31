@@ -8,54 +8,42 @@ package net.mm2d.widgetdemo
 
 import android.app.WallpaperManager
 import android.graphics.Color
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import net.mm2d.widgetdemo.databinding.ActivityWallpaperBinding
 
 class WallpaperActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityWallpaperBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_wallpaper)
+        binding = ActivityWallpaperBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         window.decorView.systemUiVisibility = SYSTEM_UI_VISIBLE
-        val recyclerView =
-            findViewById<View>(R.id.recycler_view) as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = CardAdapter(this)
-        recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter
         val manager = WallpaperManager.getInstance(this)
-        recyclerView.setOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             private var savedOffset = 0
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int
-            ) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 savedOffset += dy
-                if (recyclerView.childCount == 0) {
-                    return
-                }
+                if (recyclerView.childCount == 0) return
                 val height = recyclerView.getChildAt(0).height * adapter.itemCount
-                if (height == 0) {
-                    return
-                }
+                if (height == 0) return
                 val offset = savedOffset / height.toFloat()
                 manager.setWallpaperOffsets(recyclerView.windowToken, offset, offset)
             }
         })
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            adapter.setOnItemClickListener(object : CardAdapter.OnItemClickListener {
-                override fun onClick(color: Int) {
-                    window.statusBarColor = color
-                    window.navigationBarColor = color
-                }
-            })
-            window.statusBarColor = Color.TRANSPARENT
-            window.navigationBarColor = Color.TRANSPARENT
+        adapter.setOnItemClickListener {
+            window.statusBarColor = it
+            window.navigationBarColor = it
         }
+        window.statusBarColor = Color.TRANSPARENT
+        window.navigationBarColor = Color.TRANSPARENT
     }
 
     override fun finish() {

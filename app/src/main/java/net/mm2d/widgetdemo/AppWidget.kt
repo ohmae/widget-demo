@@ -11,23 +11,16 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.RemoteViews
 
 /**
  * Implementation of App Widget functionality.
  */
 class AppWidget : AppWidgetProvider() {
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(
-                context,
-                appWidgetManager,
-                appWidgetId
-            )
+    override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
+        ids.forEach {
+            updateAppWidget(context, manager, it)
         }
     }
 
@@ -35,26 +28,26 @@ class AppWidget : AppWidgetProvider() {
     override fun onDisabled(context: Context) {}
 
     companion object {
-        fun updateAppWidget(
-            context: Context, appWidgetManager: AppWidgetManager,
-            appWidgetId: Int
-        ) {
-            val views = RemoteViews(context.packageName,
-                R.layout.app_widget
-            )
-            val intent1 = Intent(context, TransparentActivity::class.java)
-            intent1.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            views.setOnClickPendingIntent(
-                R.id.icon1,
-                PendingIntent.getActivity(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT)
-            )
-            val intent2 = Intent(context, WallpaperActivity::class.java)
-            intent2.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            views.setOnClickPendingIntent(
-                R.id.icon2,
-                PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT)
-            )
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+        private val FLAGS = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        private fun Intent.toActivityPendingIntent(context: Context): PendingIntent =
+            PendingIntent.getActivity(context, 0, this, FLAGS)
+
+        fun updateAppWidget(context: Context, manager: AppWidgetManager, id: Int) {
+            val views = RemoteViews(context.packageName, R.layout.app_widget)
+            Intent(context, TransparentActivity::class.java).let {
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                views.setOnClickPendingIntent(R.id.icon1, it.toActivityPendingIntent(context))
+            }
+            Intent(context, WallpaperActivity::class.java).let {
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                views.setOnClickPendingIntent(R.id.icon2, it.toActivityPendingIntent(context))
+            }
+            manager.updateAppWidget(id, views)
         }
     }
 }
