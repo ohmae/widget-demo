@@ -14,7 +14,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         >
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +33,10 @@
             android:theme="@style/AppTheme.Wallpaper"
             />
 
-        <receiver android:name=".AppWidget">
+        <receiver
+            android:name=".AppWidget"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

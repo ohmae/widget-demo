@@ -13,13 +13,13 @@ val versionMinor = 0
 val versionPatch = 1
 
 android {
-    compileSdk = 30
-    buildToolsVersion = "30.0.3"
+    compileSdk = 31
+    buildToolsVersion = "31.0.0"
 
     defaultConfig {
         applicationId = "net.mm2d.widgetdemo"
         minSdk = 21
-        targetSdk = 30
+        targetSdk = 31
         versionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
         resourceConfigurations += "en"
@@ -58,7 +58,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.appcompat:appcompat:1.4.1")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
 }
